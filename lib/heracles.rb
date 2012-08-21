@@ -1,3 +1,5 @@
+require "heracles/version"
+
 module Heracles
-  VERSION = "0.1.0"
+  # Your code goes here...
 end
