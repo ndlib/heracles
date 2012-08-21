@@ -1,5 +1,4 @@
-require "heracles/version"
+require "heracles/engine"
 
 module Heracles
-  # Your code goes here...
 end

@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/heracles/version', __FILE__)
+$:.push File.expand_path("../lib", __FILE__)
+
+require 'heracles/version'
 
 Gem::Specification.new do |gem|
   gem.authors       = [
@@ -20,4 +22,8 @@ Gem::Specification.new do |gem|
   gem.name          = "heracles"
   gem.require_paths = ["lib"]
   gem.version       = Heracles::VERSION
+
+  gem.add_dependency "rails", "~> 3.2.7"
+  gem.add_development_dependency "sqlite3"
+  gem.add_development_dependency "capybara"
 end
