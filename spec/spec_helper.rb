@@ -6,13 +6,15 @@ if ENV['COVERAGE']
   SimpleCov.command_name "spec"
 end
 
-require 'rspec/rails'
+require 'rspec'
+require 'rails'
 require 'rspec/autorun'
 require 'rspec_on_rails_matchers'
 require 'rspec/given'
 require 'resque_spec'
 
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[File.expand_path("spec/support/**/*.rb", File.dirname(__FILE__))].
+  each {|f| require f}
 
 require 'factory_girl'
 require 'rr'

@@ -37,5 +37,11 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec-given', '~>1.6'
   gem.add_development_dependency 'rspec-on-rails-matchers'
   gem.add_development_dependency 'rspec-rails'
+  gem.add_development_dependency 'resque_spec'
+  gem.add_development_dependency 'rr'
+  gem.add_development_dependency 'ndlib-on-rspec'
+  gem.add_development_dependency 'simplecov'
+  gem.add_development_dependency 'timecop'
+  gem.add_development_dependency 'webmock'
 
 end
