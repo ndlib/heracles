@@ -15,7 +15,7 @@
 #
 
 require_relative '../spec_helper'
-
+require_relative '../../app/models/job'
 describe Job do
   context 'It responds to the correct methods' do
     Given(:job) { Job.new }

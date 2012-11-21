@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'active_record'
 
 # A key is `alive` if it is allowed to unlock the API.
 # The opposite of `alive` is `dead`.

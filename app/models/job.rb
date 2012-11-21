@@ -1,19 +1,6 @@
-# == Schema Information
-#
-# Table name: jobs
-#
-#  id             :integer          not null, primary key
-#  status         :string(255)
-#  workflow_name  :string(255)
-#  metadata       :string(255)
-#  workflow_state :string(255)
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  context_code   :string(255)
-#  parent_id      :integer
-#  parameters     :text
-#
-
+require 'active_record'
+require 'morphine'
+require_relative './workflow_task'
 class Job < ActiveRecord::Base
   include Morphine
 
@@ -36,9 +23,9 @@ class Job < ActiveRecord::Base
     }
   )
 
-  has_many :audits, dependent: :destroy
+  # has_many :audits, dependent: :destroy
   has_many :workflow_tasks, dependent: :destroy
-  has_many :datafiles, dependent: :destroy
+  # has_many :datafiles, dependent: :destroy
 
   def self.serialization_for_active_workflow(workflow_name)
     active_list = where(workflow_name: workflow_name, status: 'active')

@@ -16,7 +16,7 @@ require 'resque_spec'
 Dir[File.expand_path("spec/support/**/*.rb", File.dirname(__FILE__))].
   each {|f| require f}
 
-require 'factory_girl'
+require 'factory_girl_rails'
 require 'rr'
 
 require 'database_cleaner'
@@ -28,8 +28,8 @@ require 'database_cleaner'
 
 RSpec.configure do |config|
   config.mock_with :rr
-  config.include(IntegrationServerHelper, type: :feature)
-  config.include(IntegrationServerHelper, type: :request)
+  # config.include(IntegrationServerHelper, type: :feature)
+  # config.include(IntegrationServerHelper, type: :request)
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -37,24 +37,24 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = false
+  # config.use_transactional_fixtures = false
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
-  config.infer_base_class_for_anonymous_controllers = false
+  # config.infer_base_class_for_anonymous_controllers = false
   config.before(:suite) do
-    DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean_with(:truncation)
+    # DatabaseCleaner.strategy = :truncation
+    # DatabaseCleaner.clean_with(:truncation)
   end
 
   config.before(:each) do
-    ResqueSpec.reset!
-    DatabaseCleaner.start
+    # ResqueSpec.reset!
+    # DatabaseCleaner.start
   end
 
   config.after(:each) do
-    DatabaseCleaner.clean
+    # DatabaseCleaner.clean
     RR.verify
   end
 

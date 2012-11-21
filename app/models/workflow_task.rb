@@ -12,6 +12,7 @@
 #  time_start  :datetime
 #  updated_at  :datetime         not null
 #
+require 'active_record'
 
 class WorkflowTask < ActiveRecord::Base
   attr_accessible :name, :note, :status, :time_finish, :time_start
