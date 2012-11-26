@@ -23,11 +23,12 @@ require 'rspec/autorun'
 require 'rspec_on_rails_matchers'
 require 'rspec/given'
 require 'resque_spec'
+require 'ndlib-on-rspec'
 
 require 'factory_girl_rails'
 
-Dir[File.expand_path("spec/support/**/*.rb", File.dirname(__FILE__))].
-  each {|f| require f}
+support_files_glob = File.expand_path("support/**/*.rb", File.dirname(__FILE__))
+Dir[support_files_glob].each {|f| require f }
 
 require 'rr'
 require 'database_cleaner'
@@ -39,7 +40,7 @@ require 'database_cleaner'
 
 RSpec.configure do |config|
   config.mock_with :rr
-  # config.include(IntegrationServerHelper, type: :feature)
+  # config.include(WorkerWithMockedJobHelper, type: :worker)
   # config.include(IntegrationServerHelper, type: :request)
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures

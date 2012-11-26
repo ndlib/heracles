@@ -29,6 +29,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'resque'
   gem.add_dependency 'morphine'
   gem.add_dependency 'resque-ensure-connected'
+  gem.add_dependency 'nokogiri'
+  gem.add_dependency 'xpath'
   gem.add_development_dependency "sqlite3"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "capybara"

@@ -29,7 +29,7 @@ module Heracles::Worker
 
     attr_reader :job
     def initialize(job_id)
-      @job = Job.find(job_id.to_i)
+      @job = Heracles::Job.find(job_id.to_i)
     end
 
     # Provide a unified interface for logging worker actions
@@ -58,7 +58,7 @@ module Heracles::Worker
 
     def __perform__
       log do
-        WorkflowTask.handle_task_response(
+        Heracles::WorkflowTask.handle_task_response(
           task_name,
           job_id,
           process_with_response
