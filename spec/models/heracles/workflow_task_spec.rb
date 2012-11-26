@@ -17,7 +17,7 @@ require 'spec_helper'
 
 describe Heracles::WorkflowTask do
   context '.active_task_names', slow: true do
-    Given(:workflow_task) { FactoryGirl.create(:workflow_task) }
+    Given(:workflow_task) { FactoryGirl.create(:heracles_workflow_task) }
     When{ workflow_task }
     Then { Heracles::WorkflowTask.active_task_names.should include(workflow_task.name) }
   end
@@ -29,7 +29,7 @@ describe Heracles::WorkflowTask do
 
   context '.resync_work_queues' do
     When {
-      task = FactoryGirl.create(:workflow_task,
+      task = FactoryGirl.create(:heracles_workflow_task,
                                 name: 'dummy',
                                 job_id: 1,
                                 status: 'active')
@@ -42,7 +42,7 @@ describe Heracles::WorkflowTask do
   end
 
   context '.active_for_task' do
-    Given(:task) { FactoryGirl.create(:workflow_task,
+    Given(:task) { FactoryGirl.create(:heracles_workflow_task,
                                       name: 'dummy',
                                       status: 'active') }
     When {
@@ -54,8 +54,8 @@ describe Heracles::WorkflowTask do
   end
 
   context '.handle_task_response' do
-    Given(:job) { FactoryGirl.create(:job) }
-    Given(:task) { FactoryGirl.create(:workflow_task,
+    Given(:job) { FactoryGirl.create(:heracles_job) }
+    Given(:task) { FactoryGirl.create(:heracles_workflow_task,
                                       name: 'dummy',
                                       job_id: job.id,
                                       status: 'active') }
@@ -69,7 +69,7 @@ describe Heracles::WorkflowTask do
   end
 
   context '#update_with_response' do
-    Given(:task) { FactoryGirl.create(:workflow_task) }
+    Given(:task) { FactoryGirl.create(:heracles_workflow_task) }
     When {
       mock(task.job).handle_response(:ok)
       task.update_with_response(:ok)

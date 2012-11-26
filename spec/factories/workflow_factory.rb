@@ -1,4 +1,4 @@
 FactoryGirl.define do
-  factory :workflow, class: Heracles::Workflow::Base do
+  factory :heracles_workflow, class: Heracles::Workflow::Base do
   end
 end

@@ -14,9 +14,9 @@
 #
 
 FactoryGirl.define do
-  factory :workflow_task, class: Heracles::WorkflowTask do
+  factory :heracles_workflow_task, class: Heracles::WorkflowTask do
     sequence(:name) {|n| "Name #{n}"}
     status 'active'
-    association :job
+    association :job, factory: :heracles_job
   end
 end

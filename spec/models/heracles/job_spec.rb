@@ -27,14 +27,14 @@ describe Heracles::Job do
   end
 
   it 'requires valid workflow_name' do
-    job = FactoryGirl.build(:job, workflow_name: 'ChunkBacon')
+    job = FactoryGirl.build(:heracles_job, workflow_name: 'ChunkBacon')
     job.valid?.should == false
     job.workflow_name = 'trivial'
     job.valid?.should == true
   end
   context '#reset_job_workflow' do
-    Given(:job) { FactoryGirl.create(:job, workflow_name: 'trivial') }
-    Given(:task) { FactoryGirl.create(:workflow_task, job_id: job.id) }
+    Given(:job) { FactoryGirl.create(:heracles_job, workflow_name: 'trivial') }
+    Given(:task) { FactoryGirl.create(:heracles_workflow_task, job_id: job.id) }
 
     it 'will cancel every active task belonging to this job and restart the jobs workflow' do
       workflow_tasks = stub(Object.new).active { [task] }
@@ -52,7 +52,7 @@ describe Heracles::Job do
 
   context '#handle_response' do
     Given(:wf) { Heracles::Workflow::Trivial }
-    Given(:job) { FactoryGirl.create(:job, workflow: wf) }
+    Given(:job) { FactoryGirl.create(:heracles_job, workflow: wf) }
 
     it 'changes status to completed when finished' do
       mock(wf).transition(anything, :a_message) { {next_state: :done} }

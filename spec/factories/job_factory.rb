@@ -15,12 +15,12 @@
 #
 
 FactoryGirl.define do
-  factory :job, class: Heracles::Job do
+  factory :heracles_job, class: Heracles::Job do
     metadata "<xml ftw='false' />"
     status 'active'
     workflow_name 'trivial'
     workflow_state 'start'
-    association :submitter, :factory => :api_key
+    association :submitter, factory: :heracles_api_key
     created_at Time.now
     updated_at Time.now
   end

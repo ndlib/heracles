@@ -5,9 +5,9 @@ describe Heracles::Worker::AlwaysOk do
     ResqueSpec.inline = false
   end
   context '#process_with_response', redis: true, slow: true do
-    Given(:job) { FactoryGirl.create(:job) }
+    Given(:job) { FactoryGirl.create(:heracles_job) }
     Given(:workflow_task) {
-        FactoryGirl.create(:workflow_task,
+        FactoryGirl.create(:heracles_workflow_task,
                            name: 'always_ok',
                            job: job
                            )
@@ -17,9 +17,9 @@ describe Heracles::Worker::AlwaysOk do
   end
 
   context '.perform', redis: true, slow: true do
-    Given(:job) { FactoryGirl.create(:job) }
+    Given(:job) { FactoryGirl.create(:heracles_job) }
     Given(:workflow_task) {
-        FactoryGirl.create(:workflow_task,
+        FactoryGirl.create(:heracles_workflow_task,
                            name: 'always_ok',
                            job: job
                            )

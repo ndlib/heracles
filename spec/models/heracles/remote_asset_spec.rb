@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Heracles::RemoteAsset do
-  subject { FactoryGirl.build(:remote_asset) }
+  subject { FactoryGirl.build(:heracles_remote_asset) }
   it { subject.should respond_to(:data) }
   it { subject.should respond_to(:name) }
   it { subject.should respond_to(:content_type) }

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe Heracles::Job do
-  Given(:job) {FactoryGirl.create(:job, parameters: parameters)}
+  Given(:job) {FactoryGirl.create(:heracles_job, parameters: parameters)}
   Given(:parameters) { {hello: 'world', key: 'other_value'} }
   Given(:key) { 'key' }
 
   context '#handle_response', slow: true do
     before(:all) do
-      @trivial_job = FactoryGirl.create(:job, workflow_state: 'wait_always_ok')
+      @trivial_job = FactoryGirl.create(:heracles_job, workflow_state: 'wait_always_ok')
     end
 
     When { @trivial_job.handle_response(:ok) }

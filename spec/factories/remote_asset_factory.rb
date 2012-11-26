@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :remote_asset, class: Heracles::RemoteAsset do
+  factory :heracles_remote_asset, class: Heracles::RemoteAsset do
     data File.read(__FILE__)
     sequence(:name) { |n| "name-#{n}"}
     content_type 'text/plain'
