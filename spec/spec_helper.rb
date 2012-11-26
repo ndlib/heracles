@@ -1,9 +1,20 @@
 require 'rubygems'
 ENV["RAILS_ENV"] ||= 'test'
+
 if ENV['COVERAGE']
   require 'simplecov'
   SimpleCov.start 'rails'
   SimpleCov.command_name "spec"
+end
+
+require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require "rails/test_help"
+
+Rails.backtrace_cleaner.remove_silencers!
+
+# Load fixtures from the engine
+if ActiveSupport::TestCase.method_defined?(:fixture_path=)
+  ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
 end
 
 require 'rspec'
@@ -13,12 +24,12 @@ require 'rspec_on_rails_matchers'
 require 'rspec/given'
 require 'resque_spec'
 
+require 'factory_girl_rails'
+
 Dir[File.expand_path("spec/support/**/*.rb", File.dirname(__FILE__))].
   each {|f| require f}
 
-require 'factory_girl_rails'
 require 'rr'
-
 require 'database_cleaner'
 
 # # If the below is uncommented, then you will be directly hitting the Redis
