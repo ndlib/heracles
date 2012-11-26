@@ -1,5 +1,5 @@
 require 'method_decorators/decorators'
-module Worker
+module Heracles::Worker
   class Base
     def self.queue=(queue_name)
       @queue = queue_name
@@ -19,7 +19,7 @@ module Worker
           job.fetch_parameter(key)
         rescue NameError, KeyError => e
           if default_value.nil?
-            raise Worker::InvalidParameterization.new(job, key, e)
+            raise Heracles::Worker::InvalidParameterization.new(job, key, e)
           else
             return default_value
           end

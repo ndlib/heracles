@@ -14,11 +14,11 @@
 #  parameters     :text
 #
 
-require_relative '../spec_helper'
+require 'spec_helper'
 
-describe Job do
+describe Heracles::Job do
   context 'It responds to the correct methods' do
-    Given(:job) { Job.new }
+    Given(:job) { Heracles::Job.new }
     Then { job.should respond_to(:context_code) }
     Then { job.should respond_to(:metadata) }
     Then { job.should respond_to(:parent_id) }
@@ -51,7 +51,7 @@ describe Job do
   end
 
   context '#handle_response' do
-    Given(:wf) { Workflow::Trivial }
+    Given(:wf) { Heracles::Workflow::Trivial }
     Given(:job) { FactoryGirl.create(:job, workflow: wf) }
 
     it 'changes status to completed when finished' do
@@ -65,7 +65,7 @@ describe Job do
         {next_state: :wait_a_new_task,
           add_to_queue: :a_new_task
       }}
-      mock(WorkflowTask).start(job, :a_new_task)
+      mock(Heracles::WorkflowTask).start(job, :a_new_task)
 
       job.handle_response(:a_message)
       job.status.should_not == "completed"

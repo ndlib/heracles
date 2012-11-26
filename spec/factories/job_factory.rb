@@ -15,7 +15,7 @@
 #
 
 FactoryGirl.define do
-  factory :job do
+  factory :job, class: Heracles::Job do
     metadata "<xml ftw='false' />"
     status 'active'
     workflow_name 'trivial'

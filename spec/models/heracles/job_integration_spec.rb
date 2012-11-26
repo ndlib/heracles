@@ -1,6 +1,6 @@
-require_relative '../spec_helper'
+require 'spec_helper'
 
-describe Job do
+describe Heracles::Job do
   Given(:job) {FactoryGirl.create(:job, parameters: parameters)}
   Given(:parameters) { {hello: 'world', key: 'other_value'} }
   Given(:key) { 'key' }
@@ -36,15 +36,15 @@ describe Job do
   end
 
   context '#spawn! works', slow: true do
-    Given(:job_count) {Job.count}
+    Given(:job_count) {Heracles::Job.count}
     Given(:child) {job.spawn!("trivial", {key: "value"})}
     When {job; job_count; child}
-    Then {Job.count.should == (job_count + 1)}
+    Then {Heracles::Job.count.should == (job_count + 1)}
     Then {child.parent_id.should == job[:id]}
     Then {child.fetch_parameter(:key).should == "value"}
     Then {child.workflow_state.should == :wait_always_ok}
     Then {child.workflow_tasks.count.should == 1}
-    Then {Worker::AlwaysOk.should have_queued(child[:id]).in :main}
+    Then {Heracles::Worker::AlwaysOk.should have_queued(child[:id]).in :main}
   end
 
 end

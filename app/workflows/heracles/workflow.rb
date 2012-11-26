@@ -1,4 +1,4 @@
-module Workflow
+module Heracles::Workflow
   class NotFoundError < NameError
     def initialize(base, name, constant_to_lookup)
       super("Workflow for name #{name.inspect} not found.

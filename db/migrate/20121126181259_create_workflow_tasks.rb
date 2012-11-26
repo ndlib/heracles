@@ -1,6 +1,6 @@
 class CreateWorkflowTasks < ActiveRecord::Migration
   def change
-    create_table "workflow_tasks" do |t|
+    create_table "heracles_workflow_tasks" do |t|
       t.string   "name"
       t.datetime "time_start"
       t.datetime "time_finish"
@@ -11,6 +11,6 @@ class CreateWorkflowTasks < ActiveRecord::Migration
       t.datetime "updated_at",  :null => false
     end
 
-    add_index "workflow_tasks", ["job_id"]
+    add_index "heracles_workflow_tasks", ["job_id"]
   end
 end

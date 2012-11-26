@@ -1,4 +1,4 @@
-module Workflow
+module Heracles::Workflow
   # The workflow module implements a DSL to describe sequential workflows.
   #
   # The DSL presents a simple model where each state is waiting for a task to

@@ -1,5 +1,5 @@
-unless defined?(RemoteAsset)
-  RemoteAsset = Struct.new(
+unless defined?(Heracles::RemoteAsset)
+  Heracles::RemoteAsset = Struct.new(
     :data,
     :name,
     :content_type,

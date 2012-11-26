@@ -14,7 +14,7 @@
 #  parameters     :text
 #
 
-class Job < ActiveRecord::Base
+class Heracles::Job < ActiveRecord::Base
   require 'morphine'
   include Morphine
 
@@ -29,7 +29,7 @@ class Job < ActiveRecord::Base
     :workflow_name,
     {
       inclusion: {
-        in: lambda { |job| Workflow.names },
+        in: lambda { |job| ::Heracles::Workflow.names },
         allow_nil: false,
         allow_blank: false,
         message: "could not be find in Workflow.names"
@@ -37,9 +37,8 @@ class Job < ActiveRecord::Base
     }
   )
 
-  has_many :audits, dependent: :destroy
-  has_many :workflow_tasks, dependent: :destroy
-  belongs_to :submitter, class_name: "ApiKey"
+  has_many :workflow_tasks, dependent: :destroy, class_name: "Heracles::WorkflowTask"
+  belongs_to :submitter, class_name: "Heracles::ApiKey"
 
   def self.serialization_for_active_workflow(workflow_name)
     active_list = where(workflow_name: workflow_name, status: 'active')
@@ -91,7 +90,7 @@ class Job < ActiveRecord::Base
     transition = workflow.transition(workflow_state, response)
 
     if action = transition[:add_to_queue]
-      WorkflowTask.start(self, action)
+      Heracles::WorkflowTask.start(self, action)
     end
 
     self.workflow_state = transition[:next_state]
@@ -118,7 +117,7 @@ class Job < ActiveRecord::Base
   # starts a new job having this one as its parent
   # all the parameters are passed opaquely to the new job
   def spawn!(new_workflow, parameters={})
-    Job.create_and_start_workflow(
+    Heracles::Job.create_and_start_workflow(
       workflow_name: new_workflow,
       parameters: parameters.stringify_keys
     ) do |child|
@@ -136,6 +135,6 @@ class Job < ActiveRecord::Base
 
   protected
   register :workflow do
-    Workflow.factory(workflow_name)
+    ::Heracles::Workflow.factory(workflow_name)
   end
 end

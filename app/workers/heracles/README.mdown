@@ -6,7 +6,7 @@
 ***
 
 Workers are run on a forked process, on a possibly different machine than the
-workflow manager. Each worker should implement a class deriving `Worker::Base`
+workflow manager. Each worker should implement a class deriving `Heracles::Worker::Base`
 and implement a method named `process_with_response`. There is an instance
 variable @job which contains an ActiveRecord model of the current job. The
 method `process_with_response` should return a symbol which is the workers

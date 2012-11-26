@@ -1,4 +1,4 @@
-module Worker
+module Heracles::Worker
   class NotFoundError < NameError
   end
 

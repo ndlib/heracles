@@ -1,6 +1,6 @@
-require_relative '../spec_helper'
+require 'spec_helper'
 
-describe RemoteAsset do
+describe Heracles::RemoteAsset do
   subject { FactoryGirl.build(:remote_asset) }
   it { subject.should respond_to(:data) }
   it { subject.should respond_to(:name) }

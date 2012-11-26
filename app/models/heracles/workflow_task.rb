@@ -13,9 +13,9 @@
 #  updated_at  :datetime         not null
 #
 
-class WorkflowTask < ActiveRecord::Base
+class Heracles::WorkflowTask < ActiveRecord::Base
   attr_accessible :name, :note, :status, :time_finish, :time_start
-  belongs_to :job
+  belongs_to :job, class_name: "Heracles::Job"
 
   scope :active, where(status: 'active')
 
@@ -28,7 +28,7 @@ class WorkflowTask < ActiveRecord::Base
     new(:name => action_name) do |task|
       task.job = job
       task.status = 'active'
-      Worker.enqueue(action_name, job[:id])
+      Heracles::Worker.enqueue(action_name, job[:id])
     end.save!
   end
 
@@ -37,11 +37,11 @@ class WorkflowTask < ActiveRecord::Base
     # If a worker is processing a task on a queue when we delete the queue, then the job
     # may be executed twice. But in the expected use case for this method either the
     # workers are paused and not taking on new jobs, or the queues are already empty.
-    Worker.clear_queues
+    Heracles::Worker.clear_queues
 
     # now enqueue everything in our database
     active.find_each do |task|
-      Worker.enqueue(task[:name], task[:job_id])
+      Heracles::Worker.enqueue(task[:name], task[:job_id])
     end
   end
 

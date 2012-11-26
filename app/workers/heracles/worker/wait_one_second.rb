@@ -1,4 +1,4 @@
-class Worker::WaitOneSecond < Worker::Base
+class Heracles::Worker::WaitOneSecond < Heracles::Worker::Base
   self.queue = :main
 
   def process_with_response

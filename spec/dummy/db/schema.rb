@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(:version => 20121126181259) do
 
-  create_table "api_keys", :force => true do |t|
+  create_table "heracles_api_keys", :force => true do |t|
     t.string   "key"
     t.string   "name"
     t.boolean  "is_alive"
@@ -21,9 +21,9 @@ ActiveRecord::Schema.define(:version => 20121126181259) do
     t.datetime "updated_at", :null => false
   end
 
-  add_index "api_keys", ["key"], :name => "index_api_keys_on_key", :unique => true
+  add_index "heracles_api_keys", ["key"], :name => "index_heracles_api_keys_on_key", :unique => true
 
-  create_table "jobs", :force => true do |t|
+  create_table "heracles_jobs", :force => true do |t|
     t.string   "status",         :limit => 20
     t.string   "workflow_name",  :limit => 64
     t.text     "metadata"
@@ -36,11 +36,11 @@ ActiveRecord::Schema.define(:version => 20121126181259) do
     t.integer  "submitter_id"
   end
 
-  add_index "jobs", ["context_code"], :name => "index_jobs_on_context_code"
-  add_index "jobs", ["parent_id"], :name => "index_jobs_on_parent_id"
-  add_index "jobs", ["submitter_id"], :name => "index_jobs_on_submitter_id"
+  add_index "heracles_jobs", ["context_code"], :name => "index_heracles_jobs_on_context_code"
+  add_index "heracles_jobs", ["parent_id"], :name => "index_heracles_jobs_on_parent_id"
+  add_index "heracles_jobs", ["submitter_id"], :name => "index_heracles_jobs_on_submitter_id"
 
-  create_table "workflow_tasks", :force => true do |t|
+  create_table "heracles_workflow_tasks", :force => true do |t|
     t.string   "name"
     t.datetime "time_start"
     t.datetime "time_finish"
@@ -51,6 +51,6 @@ ActiveRecord::Schema.define(:version => 20121126181259) do
     t.datetime "updated_at",  :null => false
   end
 
-  add_index "workflow_tasks", ["job_id"], :name => "index_workflow_tasks_on_job_id"
+  add_index "heracles_workflow_tasks", ["job_id"], :name => "index_heracles_workflow_tasks_on_job_id"
 
 end

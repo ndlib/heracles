@@ -1,4 +1,4 @@
-class Worker::SpawnNewRabbit < Worker::Base
+class Heracles::Worker::SpawnNewRabbit < Heracles::Worker::Base
   @queue = :main
 
   delegate_to_job_parameter('prob_of_yes', 0.5)

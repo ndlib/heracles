@@ -13,17 +13,17 @@
 #  updated_at  :datetime         not null
 #
 
-require_relative '../spec_helper'
+require 'spec_helper'
 
-describe WorkflowTask do
+describe Heracles::WorkflowTask do
   context '.active_task_names', slow: true do
     Given(:workflow_task) { FactoryGirl.create(:workflow_task) }
     When{ workflow_task }
-    Then { WorkflowTask.active_task_names.should include(workflow_task.name) }
+    Then { Heracles::WorkflowTask.active_task_names.should include(workflow_task.name) }
   end
 
   context '.active' do
-    Given(:active_scope) { WorkflowTask.active }
+    Given(:active_scope) { Heracles::WorkflowTask.active }
     Then { active_scope.where_values_hash.should == {status: 'active'} }
   end
 
@@ -33,11 +33,11 @@ describe WorkflowTask do
                                 name: 'dummy',
                                 job_id: 1,
                                 status: 'active')
-      mock(Worker).clear_queues
-      mock(Worker).enqueue('dummy', 1)
+      mock(Heracles::Worker).clear_queues
+      mock(Heracles::Worker).enqueue('dummy', 1)
     }
     Then {
-      WorkflowTask.resync_work_queues
+      Heracles::WorkflowTask.resync_work_queues
     }
   end
 
@@ -49,7 +49,7 @@ describe WorkflowTask do
       task
     }
     Then {
-      WorkflowTask.active_for_task('dummy').should include(task.job_id)
+      Heracles::WorkflowTask.active_for_task('dummy').should include(task.job_id)
     }
   end
 
@@ -60,7 +60,7 @@ describe WorkflowTask do
                                       job_id: job.id,
                                       status: 'active') }
     When {
-      WorkflowTask.handle_task_response('dummy', job.id, :ok)
+      Heracles::WorkflowTask.handle_task_response('dummy', job.id, :ok)
       task.reload
     }
     Then {
@@ -81,7 +81,7 @@ describe WorkflowTask do
   end
 
   context '#cancel' do
-    Given(:task) { WorkflowTask.new }
+    Given(:task) { Heracles::WorkflowTask.new }
     Given(:cancel_time) { Time.new(1) }
     When { stub(Time).now { cancel_time } }
     When {

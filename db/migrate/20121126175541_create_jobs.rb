@@ -1,6 +1,6 @@
 class CreateJobs < ActiveRecord::Migration
   def change
-    create_table "jobs" do |t|
+    create_table "heracles_jobs" do |t|
       t.string   "status",         :limit => 20
       t.string   "workflow_name",  :limit => 64
       t.text     "metadata"
@@ -13,9 +13,9 @@ class CreateJobs < ActiveRecord::Migration
       t.integer  "submitter_id"
     end
 
-    add_index "jobs", ["context_code"]
-    add_index "jobs", ["parent_id"]
-    add_index "jobs", ["submitter_id"]
+    add_index "heracles_jobs", ["context_code"]
+    add_index "heracles_jobs", ["parent_id"]
+    add_index "heracles_jobs", ["submitter_id"]
 
   end
 end
