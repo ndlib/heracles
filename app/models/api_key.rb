@@ -1,10 +1,12 @@
 require 'securerandom'
-require 'active_record'
 
 # A key is `alive` if it is allowed to unlock the API.
 # The opposite of `alive` is `dead`.
 
 class ApiKey < ActiveRecord::Base
+
+  has_many :jobs, foreign_key: "submitter_id", class_name: "Job"
+
   attr_accessible :is_alive, :name
 
   before_save :check_defaults

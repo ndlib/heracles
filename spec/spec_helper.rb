@@ -55,17 +55,17 @@ RSpec.configure do |config|
   # rspec-rails.
   # config.infer_base_class_for_anonymous_controllers = false
   config.before(:suite) do
-    # DatabaseCleaner.strategy = :truncation
-    # DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean_with(:truncation)
   end
 
   config.before(:each) do
-    # ResqueSpec.reset!
-    # DatabaseCleaner.start
+    ResqueSpec.reset!
+    DatabaseCleaner.start
   end
 
   config.after(:each) do
-    # DatabaseCleaner.clean
+    DatabaseCleaner.clean
     RR.verify
   end
 

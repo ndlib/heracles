@@ -1,0 +1,22 @@
+= Worker README
+
+***
+  When naming a workflow, please consult the team so we can establish
+  consistency.
+***
+
+Workers are run on a forked process, on a possibly different machine than the
+workflow manager. Each worker should implement a class deriving `Worker::Base`
+and implement a method named `process_with_response`. There is an instance
+variable @job which contains an ActiveRecord model of the current job. The
+method `process_with_response` should return a symbol which is the workers
+response to the work and is passed back into the state machine.
+
+  But don't take the documentations word for it; Review the specs of existing
+  workers.
+
+TODO: need to unify the exception and failure models, viz. should the failure
+cause by a worker returning an exceptional symbol be different than if it just
+raised an exception. At the moment, they are different since resque catches the
+exception and triggers its own failure of the task, different from the
+workflow's failure of a task.

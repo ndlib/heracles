@@ -1,127 +1,141 @@
-# require 'active_record'
-# require 'morphine'
-# require_relative './workflow_task'
-# class Job < ActiveRecord::Base
-#   include Morphine
+# == Schema Information
+#
+# Table name: jobs
+#
+#  id             :integer          not null, primary key
+#  status         :string(255)
+#  workflow_name  :string(255)
+#  metadata       :string(255)
+#  workflow_state :string(255)
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  context_code   :string(255)
+#  parent_id      :integer
+#  parameters     :text
+#
 
-#   attr_accessible(
-#     :metadata,
-#     :workflow_name,
-#     :parameters
-#   )
-#   serialize :parameters, Hash
+class Job < ActiveRecord::Base
+  require 'morphine'
+  include Morphine
 
-#   validates(
-#     :workflow_name,
-#     {
-#       inclusion: {
-#         in: lambda { |job| Workflow.names },
-#         allow_nil: false,
-#         allow_blank: false,
-#         message: "could not be find in Workflow.names"
-#       }
-#     }
-#   )
+  attr_accessible(
+    :metadata,
+    :workflow_name,
+    :parameters
+  )
+  serialize :parameters, Hash
 
-#   # has_many :audits, dependent: :destroy
-#   has_many :workflow_tasks, dependent: :destroy
-#   # has_many :datafiles, dependent: :destroy
+  validates(
+    :workflow_name,
+    {
+      inclusion: {
+        in: lambda { |job| Workflow.names },
+        allow_nil: false,
+        allow_blank: false,
+        message: "could not be find in Workflow.names"
+      }
+    }
+  )
 
-#   def self.serialization_for_active_workflow(workflow_name)
-#     active_list = where(workflow_name: workflow_name, status: 'active')
-#     active_list.collect! { |s| {id: s[:id], workflow_state: s.workflow_state} }
+  has_many :audits, dependent: :destroy
+  has_many :workflow_tasks, dependent: :destroy
+  belongs_to :submitter, class_name: "ApiKey"
 
-#     { workflow: {
-#         name: workflow_name,
-#         status: 'active',
-#         jobs: active_list
-#       }
-#       }
-#   end
+  def self.serialization_for_active_workflow(workflow_name)
+    active_list = where(workflow_name: workflow_name, status: 'active')
+    active_list.collect! { |s| {id: s[:id], workflow_state: s.workflow_state} }
 
-#   def self.create_and_start_workflow(attributes)
-#     new(attributes) do |job|
-#       yield job if block_given?
-#       job.start_workflow
-#     end
-#   end
+    { workflow: {
+        name: workflow_name,
+        status: 'active',
+        jobs: active_list
+      }
+      }
+  end
 
-#   def start_workflow(new_workflow_name=nil)
-#     self.workflow_name = new_workflow_name || self.workflow_name
-#     return false if !valid?
-#     self.workflow_state = workflow.initial_state
-#     self.status = 'active'
-#     self.save!
-#     do_initial_transition
-#     return true
-#   end
+  def self.create_and_start_workflow(attributes)
+    new(attributes) do |job|
+      yield job if block_given?
+      job.start_workflow
+    end
+  end
 
-#   def reset_job_workflow
-#     # remove from any pending task queues...
-#     # and initialize in the start state...
-#     active_tasks = self.workflow_tasks.active
+  def start_workflow(new_workflow_name=nil)
+    self.workflow_name = new_workflow_name || self.workflow_name
+    return false if !valid?
+    self.workflow_state = workflow.initial_state
+    self.status = 'active'
+    self.save!
+    do_initial_transition
+    return true
+  end
 
-#     active_tasks.each do |tsk|
-#       tsk.cancel
-#     end
+  def reset_job_workflow
+    # remove from any pending task queues...
+    # and initialize in the start state...
+    active_tasks = self.workflow_tasks.active
 
-#     start_workflow
-#   end
+    active_tasks.each do |tsk|
+      tsk.cancel
+    end
 
-#   def do_initial_transition
-#     handle_response(:ok)
-#   end
+    start_workflow
+  end
 
-#   def handle_response(response)
-#     raise "Job response #{response} is not a symbol" unless response.respond_to?(:to_sym)
-#     transition = workflow.transition(workflow_state, response)
+  def do_initial_transition
+    handle_response(:ok)
+  end
 
-#     if action = transition[:add_to_queue]
-#       WorkflowTask.start(self, action)
-#     end
+  def handle_response(response)
+    raise "Job response #{response} is not a symbol" unless response.respond_to?(:to_sym)
+    transition = workflow.transition(workflow_state, response)
 
-#     self.workflow_state = transition[:next_state]
-#     case transition[:next_state]
-#     when :done, :fail
-#       self.status = "completed"
-#     end
-#     save!
-#   end
+    if action = transition[:add_to_queue]
+      WorkflowTask.start(self, action)
+    end
 
-#   def to_i
-#     self[:id].to_i
-#   end
+    self.workflow_state = transition[:next_state]
+    case transition[:next_state]
+    when :done, :fail
+      self.status = "completed"
+    end
+    save!
+  end
 
-#   def serialize_parameter!(key,value)
-#     parameters[key.to_s] = value
-#     save!
-#   end
+  def to_i
+    self[:id].to_i
+  end
 
-#   def fetch_parameter(key)
-#     parameters.stringify_keys.fetch(key.to_s)
-#   end
+  def serialize_parameter!(key,value)
+    parameters[key.to_s] = value
+    save!
+  end
 
-#   # starts a new job having this one as its parent
-#   # all the parameters are passed opaquely to the new job
-#   def spawn!(new_workflow, parameters={})
-#     Job.create_and_start_workflow(
-#       workflow_name: new_workflow,
-#       parameters: parameters.stringify_keys
-#     ) do |child|
-#       child.parent_id = self[:id]
-#     end
-#   end
+  def fetch_parameter(key)
+    parameters.stringify_keys.fetch(key.to_s)
+  end
 
-#   def parameters=(args)
-#     super(args.stringify_keys)
-#   end
+  # starts a new job having this one as its parent
+  # all the parameters are passed opaquely to the new job
+  def spawn!(new_workflow, parameters={})
+    Job.create_and_start_workflow(
+      workflow_name: new_workflow,
+      parameters: parameters.stringify_keys
+    ) do |child|
+      child.parent_id = self[:id]
+    end
+  end
 
-#   def workflow_name=(proposed_workflow_name)
-#     super(proposed_workflow_name.to_s.underscore)
-#   end
+  def parameters=(args)
+    super(args.stringify_keys)
+  end
 
-#   protected
-#   register :workflow do
-#     Workflow.factory(workflow_name)
-#   end
-# end
+  def workflow_name=(proposed_workflow_name)
+    super(proposed_workflow_name.to_s.underscore)
+  end
+
+  protected
+  register :workflow do
+    Workflow.factory(workflow_name)
+  end
+end

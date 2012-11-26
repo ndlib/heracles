@@ -1,5 +1,4 @@
-require_relative '../spec_helper'
-require_relative '../../app/models/api_key'
+require 'spec_helper'
 
 describe ApiKey do
 
