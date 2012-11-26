@@ -1,5 +1,7 @@
 *.gem
+*.log
 *.rbc
+.DS_STORE
 .bundle
 .config
 .yardoc
